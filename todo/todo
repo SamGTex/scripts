@@ -1,0 +1,120 @@
+#! /usr/bin/env python3
+
+from class_todo import ToDo
+import os
+import tkinter as tk
+from tkinter import font as tkFont
+
+# button functions
+
+# update todo-list with input name and print
+def update():
+    name = name_input.get()
+    if type(name) is str and name:
+        global obj
+        obj = ToDo(name)
+        if os.path.exists(f'/home/gtex/scripts/todo/data/{name}.txt'):
+            obj.read_in()
+            print('To do list has been updated.')
+        else:
+            print('Created new List.')
+        tasks = obj.get()
+        txt = f'To Do: {name}\n\n'
+        for i, task in enumerate(tasks):
+            txt = txt + f'{i+1}. {task}\n'
+        show_label.config(text=txt, anchor='w')
+        exist_label.config(text=refresh_namelist())
+    return None
+
+# add given task
+def add_task():
+    task = add_input.get()
+    if type(task) is str and task:
+        obj.add(task)
+        obj.save_to_file()
+        print('Task added to list.(SAVED)')
+        update()
+    return None
+
+# delete task with given task-number
+def delete_task():
+    num = del_input.get()
+    if type(num) is int and num>0 and num<=obj.size():
+        obj.delete(num)
+        obj.save_to_file()
+        print(f'Task {num} removed.(SAVED)')
+        update()
+    else:
+        print(f'Invalid task-number: {num}')
+
+# close window (quit)
+def close_window():
+    root.destroy()
+
+# return list of existing todo-list-names
+def refresh_namelist():
+    files = os.listdir('/home/gtex/scripts/todo/data')
+    name_str = 'Existing Lists:\n\n'
+    for file in files:
+        name_str += f'{os.path.splitext(file)[0]}\n'
+    return name_str
+
+#root window
+root = tk.Tk()
+root.geometry("455x500")
+root.title('TO DO LIST')
+root.resizable(0, 0)
+
+# grid config
+#root.columnconfigure(0, weight=1)
+#root.columnconfigure(1, weight=3)
+
+# fonts
+font_12 = tkFont.Font(size=12, family='serif', weight='bold')
+font_10 = tkFont.Font(size=10, family='serif', weight='bold')
+
+helv15 = tkFont.Font(family='sans-serif', size=15, weight='bold')
+
+# name
+name_label = tk.Label(root, text='List name')
+name_label.grid(column=0, row=0, pady=5, sticky=tk.E)
+
+name_input = tk.StringVar(root)
+name_entry = tk.Entry(root, textvariable=name_input, justify='left')
+name_entry.grid(column=1, row=0, padx=20, pady=5, sticky=tk.W)
+
+name_button = tk.Button(root, text='Update', command=update, bg='#5fcb1a', fg='#ffffff', height=3, width=7)
+
+#name_button['font'] = font_12
+name_button.grid(column=2, row=0, padx=20, pady=5)
+
+# show list
+show_label = tk.Label(root, text='Please choose the name\nof the list!', justify='left', height=16, width=20, borderwidth=2, relief='solid')
+show_label['font'] = font_12
+show_label.grid(column=0, row=1, columnspan = 2, pady=50, padx=20, sticky = tk.W+tk.E)#sticky = tk.W+tk.E
+
+# existing list names
+exist_label = tk.Label(root, text=refresh_namelist(), justify='left')
+exist_label.grid(column=2, row=1, sticky=tk.N, padx=5, pady=50)
+
+# add task
+add_input = tk.StringVar(root)
+add_entry = tk.Entry(root, textvariable=add_input, width=15)
+add_entry.grid(column=0, row=3, padx=20, pady=5)
+
+add_button = tk.Button(root, text='Add task', command=add_task, bg='#5a7081', fg='#ffffff', height=3, width=12)
+add_button.grid(column=0, row=2, padx=20)
+
+# delete task
+del_input = tk.IntVar(root)
+del_entry = tk.Entry(root, textvariable=del_input, width=15)
+del_entry.grid(column=1, row=3, padx=0, pady=5)
+
+del_button = tk.Button(root, text='Delete task\n(number)', command=delete_task, bg='#5a7081', fg='#ffffff', height=3, width=12)
+del_button.grid(column=1, row=2, padx=0)
+
+# Quit
+quit_button = tk.Button(root, text='Quit\n(autosave)', command=close_window, bg='#c01010', fg='#ffffff', height=3, width=7)
+quit_button.grid(column=2, row=2, padx=20)
+
+tk.mainloop( )

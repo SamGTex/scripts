@@ -1,0 +1,34 @@
+#! /usr/bin/env python3
+
+import os
+import time
+
+print('\n-------- Texup: backup manager by GTex --------')
+print('1. Full backup')
+print('2. Save new/changed folders and files')
+print('3. Delete old folder and files')
+print('0. Exit')
+
+# get user input for option
+while True:
+    user_input = int(input('\nEntry option: '))
+    if user_input < 0 or user_input > 3:
+        print('Not a valid option!')
+    else:
+        break
+
+# run backup
+if user_input == 1:
+    print('\nStep 1: Save new/changed folders and files...')
+    os.system('backup_add')
+    print('\nStep 2: Delete old folders and files...')
+    os.system('backup_clean')
+elif user_input == 2:
+    print('\nSave new folders and files...')
+    os.system('backup_add')
+elif user_input == 3:
+    print('\nDelete old folder and files...')
+    os.system('backup_clean')
+
+print("\nThanks for using Texup!")
+time.sleep(2)
