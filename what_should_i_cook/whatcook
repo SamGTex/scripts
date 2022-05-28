@@ -1,0 +1,194 @@
+#!/usr/bin/env python
+
+import os
+import random
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
+
+#variables
+filename = 'data.txt'
+
+#functions
+def write(meal):
+    with open(filename, 'a') as file:
+        file.write(meal + '\n')
+
+def read():
+    if os.path.isfile(filename):
+        with open(filename) as file:
+            lines = file.readlines()
+            lines = [line.rstrip() for line in lines]
+    else:
+        lines = []
+    return lines
+
+def menue_input_show():
+    while True:
+        print('--------------------')
+        print('Menu:')
+        print('1. Random meal')
+        print('2. Add new meal')
+        print('3. Add folder with meals')
+        print('4. Show all meals')
+        print('5. Delete meals')
+        print('6. Reset')
+        print('0. Quit\n')
+
+        choice  = int(input('Choose from the menu (0-6): '))
+        if choice == 0 or choice == 1 or choice == 2 or choice == 3 or choice == 4 or choice == 5 or choice == 6:
+            print('--------------------')
+            return choice
+        else:
+            print('Invalid input!')
+
+def input_rnd_meal():
+    while True:
+        input_repeat_quit = input('Use "r" for repeat or "q" to return to the menu: ')
+        input_repeat_quit.replace(' ', '')
+        input_repeat_quit.lower()
+
+        if input_repeat_quit == 'r':
+            return 1
+        if input_repeat_quit == 'q':
+            return 0
+        else:
+            print('Invalid input!')
+
+def input_delete(max):
+    while True:
+        del_num = int(input('\nEnter the number of the meal to be deleted: '))
+        if del_num >= 0 and del_num <= max:
+            return del_num
+        else:
+            print(f'Invalid input. Please enter a number between 1 and {max}.')
+        
+
+
+# Welcome
+print('\n\nWelcome to WHAT SHOULD I COOK?')
+print('You do not know what you want to cook today. Then you are at the right place!')
+
+# program
+while True:
+    # show menu and get input
+    choice = menue_input_show()
+
+    # show random meal
+    if choice == 1:
+        print('1. Random meal\n')
+
+        status = 1
+        while status:
+            lines = read()
+            if lines:
+                rnd_meal = random.choice(lines)
+                print(f'Today we have {rnd_meal}!')
+                status = input_rnd_meal()
+            else:
+                print('There are no meals. Please add some first.')
+                break
+    
+    # user can add new meal
+    elif choice == 2:
+        print('2. Add new meal\n')
+        print('When you have added all meals, use "q" to return to the menu.')
+        while True:
+            new_meal = input('\nNew meal or quit: ')
+            new_meal.replace(' ', '')
+            new_meal.lower()
+            if new_meal == 'q':
+                break
+            write(new_meal)
+            print(f'The meal "{new_meal}" was addet.')
+
+    # user can choose a folder to add the file names as meal
+    elif choice == 3:
+        print('3. Add folder with meals\n')
+        print('Only files but no folders are considered as meal.')
+        print('Please select the folder!\n')
+        
+        # save path to this file
+        path_program = os.getcwd()
+
+        # path to the selected folder, change working directory
+        path_folder = askdirectory(title='Select Folder')
+        print('Chosen path:', path_folder)
+        os.chdir(path_folder)
+
+        # save alle file names as meal in a list 
+        new_meals = []
+        for f in os.listdir('.'):
+            if os.path.isfile(f):
+                new_meals.append(os.path.splitext(f)[0])
+
+        # change woring directory back to this program
+        os.chdir(path_program)
+        print('Save meals in:', os.getcwd() + '/data.txt\n')
+
+        # write meals in data.txt
+        if len(new_meals):
+            for meal in new_meals:
+                write(meal)
+                print(meal)
+            print(f'\n{len(new_meals)} meals were added successfully.')
+        else:
+            print('Failed. No meals added. The folder does not contain any files.')
+    
+    elif choice == 4:
+        lines = read()
+        print('4. Show all meals\n')
+        if lines:
+            print(f'There are {len(lines)} meals.\n')
+            for line in lines:
+                print(line)
+        else:
+            print('There are no meals. Please add some first.')
+
+    elif choice == 5:
+        print('5. Delete meals\n')
+        
+        print('\nEnter "0" to return to the menu.')
+
+        while True:
+            # read meals and show
+            lines = read()
+
+            if len(lines) == 0: # stop if no meals
+                print('The menu is empty.')
+                break
+
+            for i,line in enumerate(lines):
+                print(f'{i+1}. {line}')
+
+            # get number of item to delete
+            input_num = input_delete(len(lines))
+
+            # quit
+            if input_num == 0:
+                break
+
+            print(f'The meal "{lines[input_num - 1]}" has been deleted.\n')
+            del lines[input_num - 1]
+            with open('data.txt', 'w') as f:
+                for line in lines:
+                    f.write(line + '\n')
+                
+
+        
+
+
+    elif choice == 6:
+        print('6. Reset\n')
+        input_sure = input('Enter "DELETE" if you are sure that all data should be deleted: ')
+        if input_sure == 'DELETE':
+            if os.path.isfile('data.txt'):
+                os.remove('data.txt')
+                print('All data has been deleted!')
+            else:
+                print('The menu is already empty.')
+        else:
+            print('The data was NOT deleted.')
+
+    elif choice == 0:
+        print('Bon appetite!')
+        break
