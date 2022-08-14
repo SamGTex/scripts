@@ -1,4 +1,4 @@
-# Scrips
+# Scripts
 A few scripts that make my life easier.
 
 Add all paths in .bashrc to have global access: `export PATH="ABSOLUTE/PATH/TO/SCRIPT:$PATH"`
