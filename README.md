@@ -7,8 +7,8 @@ Add all paths in .bashrc to have global access: `export PATH="ABSOLUTE/PATH/TO/S
 Create a backup of selected folders to a certain directory.
 It just copies modified files to save time.
 
-- path_source.csv: contains path from your data that you want to save
-- path_target.csv: contains the path where you want to store the folders
+- **path_source.csv:** contains path from your data that you want to save
+- **path_target.csv:** contains the path where you want to store the folders
 - use `backup` to open the CLI based menu
 
 ## Timer
