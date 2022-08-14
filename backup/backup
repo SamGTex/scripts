@@ -2,9 +2,6 @@
 
 import os
 import time
-import filecmp
-import pandas as pd
-import shutil
 
 from methods.add import write
 from methods.clean import remove_duplicate
