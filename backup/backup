@@ -2,8 +2,30 @@
 
 import os
 import time
+import filecmp
+import pandas as pd
+import shutil
 
-print('\n-------- Texup: backup manager by GTex --------')
+from methods.add import write
+from methods.clean import remove_duplicate
+
+# change color for consol output
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    
+# get total path to this file
+filepath = os.path.abspath(os.path.dirname(__file__))
+
+# Start menu >>>>>
+print(bcolors.HEADER + '\n-------- Texup: backup manager by GTex --------' + bcolors.ENDC)
 print('1. Full backup')
 print('2. Save new/changed folders and files')
 print('3. Delete old folder and files')
@@ -11,24 +33,25 @@ print('0. Exit')
 
 # get user input for option
 while True:
-    user_input = int(input('\nEntry option: '))
+    user_input = int(input('\nOption: '))
     if user_input < 0 or user_input > 3:
-        print('Not a valid option!')
+        print(bcolors.FAIL + 'Not a valid option!' + bcolors.ENDC)
     else:
         break
 
 # run backup
 if user_input == 1:
-    print('\nStep 1: Save new/changed folders and files...')
-    os.system('backup_add')
-    print('\nStep 2: Delete old folders and files...')
-    os.system('backup_clean')
+    print(bcolors.HEADER + '\nStep 1: Save new/changed folders and files...' + bcolors.ENDC)
+    write(filepath)
+    print(bcolors.HEADER + '\nStep 2: Delete old folders and files...' + bcolors.ENDC)
+    remove_duplicate(filepath)
 elif user_input == 2:
-    print('\nSave new folders and files...')
-    os.system('backup_add')
+    print(bcolors.HEADER + '\nSave new/changed folders and files...' + bcolors.ENDC)
+    write(filepath)
 elif user_input == 3:
-    print('\nDelete old folder and files...')
-    os.system('backup_clean')
+    print(bcolors.HEADER + '\nDelete old folder and files...' + bcolors.ENDC)
+    remove_duplicate(filepath)
 
 print("\nThanks for using Texup!")
 time.sleep(2)
+# <<<<< End menu
