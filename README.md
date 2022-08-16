@@ -1,16 +1,21 @@
 # Scripts
 A few scripts that make my life easier.
 
-Add all paths in .bashrc to have global access: `export PATH="ABSOLUTE/PATH/TO/SCRIPT:$PATH"`
+- Add all paths to .bashrc to get global access: `export PATH="ABSOLUTE/PATH/TO/SCRIPT:$PATH"`
+- Make sure you have access to the script: `chmod a+x /PATH/TO/SCRIPT`
 
 ## Backup
 Create a backup of selected folders to a certain directory.
 It just copies modified files to save time.
 
-- **path_source.csv:** contains path from your data that you want to save
-- **path_target.csv:** contains the path where you want to store the folders
-- use `backup` to open the CLI based menu
+> **path_source.csv:** contains path from your data that you want to save
 
+> **path_target.csv:** contains the path where you want to store the folders
+- `backup` to open the CLI based menu
+- `backup --run OPTION` to skip the menu with OPTIONS
+  - **full**: run save + clean
+  - **save**: write all new/changed folders and files to the target directory
+  - **clean**: remove old files/folders from write directory
 ## Timer
 Simple timer that starts playing a video from youtube in your default browser, when the time is over.
 
