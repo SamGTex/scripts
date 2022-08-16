@@ -2,43 +2,70 @@
 
 import os
 import time
+import argparse
 
 from methods.bcolors import bcolors
 from methods.add import write
 from methods.clean import remove_duplicate
 
+# FUNCTIONS >>>>>
+def print_menu():
+    print(bcolors.HEADER + '\n-------- Texup: backup manager by GTex --------' + bcolors.ENDC)
+    print('Hint: You can directly run "backup --run OPTION"\n')
+    print(bcolors.UNDERLINE+'OPTIONS:'+bcolors.ENDC)
+    print(bcolors.OKGREEN + 'full:' + bcolors.ENDC + ' save and clean data')
+    print(bcolors.OKGREEN + 'save:' + bcolors.ENDC + ' save selected folder')
+    print(bcolors.OKGREEN + 'clean:' + bcolors.ENDC + ' delete old files and folders')
+    print(bcolors.OKGREEN + 'exit:' + bcolors.ENDC + ' stop program')
+    return
+
+def get_user_input():
+    while True:
+        user_input = input(bcolors.OKGREEN + '\nOption: ' + bcolors.ENDC)
+        if user_input == 'exit' or user_input=='full' or user_input=='save' or user_input=='clean':
+            return user_input
+        else:
+            print(bcolors.FAIL + 'Not a valid option: ' + user_input + bcolors.ENDC)
+
+def stop():
+    # exit program
+    print("\nThanks for using Texup!")
+    time.sleep(2)
+    exit()
+# <<<<< FUNCTIONS
 
 # get total path to this file
-filepath = os.path.abspath(os.path.dirname(__file__))
+FILEPATH = os.path.abspath(os.path.dirname(__file__))
 
-# Start menu >>>>>
-print(bcolors.HEADER + '\n-------- Texup: backup manager by GTex --------' + bcolors.ENDC)
-print('1. Full backup')
-print('2. Save new/changed folders and files')
-print('3. Delete old folder and files')
-print('0. Exit')
+# GET ARGUMENTS
+parser = argparse.ArgumentParser(description='Texup')
+parser.add_argument('-r', '--run', action="store", dest='run', default='menu', help='OPTIONS: "full", "save", "clean"')
+args = parser.parse_args()
 
-# get user input for option
-while True:
-    user_input = int(input('\nOption: '))
-    if user_input < 0 or user_input > 3:
-        print(bcolors.FAIL + 'Not a valid option!' + bcolors.ENDC)
-    else:
-        break
+# check if argument exist or get argument from user input
+if args.run == 'menu':
+    print_menu()
+    user_input = get_user_input()
+elif args.run=='full' or args.run=='save' or args.run=='clean':
+    print('test')
+    user_input = args.run
+else:
+    raise(parser.error(bcolors.FAIL + args.run + bcolors.ENDC + ' is not a valid option'))
+    stop()
 
-# run backup
-if user_input == 1:
+# execute program
+if user_input == 'full':
     print(bcolors.HEADER + '\nStep 1: Save new/changed folders and files...' + bcolors.ENDC)
-    write(filepath)
+    write(FILEPATH)
     print(bcolors.HEADER + '\nStep 2: Delete old folders and files...' + bcolors.ENDC)
-    remove_duplicate(filepath)
-elif user_input == 2:
+    remove_duplicate(FILEPATH)
+elif user_input == 'save':
     print(bcolors.HEADER + '\nSave new/changed folders and files...' + bcolors.ENDC)
-    write(filepath)
-elif user_input == 3:
+    write(FILEPATH)
+elif user_input == 'clean':
     print(bcolors.HEADER + '\nDelete old folder and files...' + bcolors.ENDC)
-    remove_duplicate(filepath)
+    remove_duplicate(FILEPATH)
+elif user_input == 'exit':
+    stop()
 
-print("\nThanks for using Texup!")
-time.sleep(2)
-# <<<<< End menu
+stop()
