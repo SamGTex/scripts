@@ -12,7 +12,8 @@ It just copies modified files to save time.
 
 > **path_target.csv:** contains the path where you want to store the folders
 - `backup` to open the CLI based menu
-- `backup --run OPTION` to skip the menu with OPTIONS
+- `backup --run OPTION` to skip the menu
+- OPTIONS
   - **full**: run save + clean
   - **save**: write all new/changed folders and files to the target directory
   - **clean**: remove old files/folders from write directory
