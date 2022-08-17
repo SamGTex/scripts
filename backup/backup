@@ -77,6 +77,6 @@ time_final = datetime.datetime.now()
 time_dif = (time_final-time_init).seconds #in seconds
 time_h = int(time_dif/60)
 time_m = time_dif % 60
-print(bcolors.OKBLUE, '\nDuration: ', time_h, 'hours, ', time_m, ' minutes', bcolors.ENDC)
+print(bcolors.OKBLUE, '\nDuration: ', time_h, 'minutes, ', time_m, ' seconds', bcolors.ENDC)
 
 stop()
