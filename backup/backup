@@ -2,6 +2,7 @@
 
 import os
 import time
+import datetime
 import argparse
 
 from methods.bcolors import bcolors
@@ -53,6 +54,9 @@ else:
     raise(parser.error(bcolors.FAIL + args.run + bcolors.ENDC + ' is not a valid option'))
     stop()
 
+# start time
+
+time_init = datetime.datetime.now()
 # execute program
 if user_input == 'full':
     print(bcolors.HEADER + '\nStep 1: Save new/changed folders and files...' + bcolors.ENDC)
@@ -67,5 +71,12 @@ elif user_input == 'clean':
     remove_duplicate(FILEPATH)
 elif user_input == 'exit':
     stop()
+
+# stop time and print write and clean duration
+time_final = datetime.datetime.now()
+time_dif = (time_final-time_init).seconds #in seconds
+time_h = int(time_dif/60)
+time_m = time_dif % 60
+print(bcolors.OKBLUE, '\nDuration: ', time_h, 'hours, ', time_m, ' minutes', bcolors.ENDC)
 
 stop()
