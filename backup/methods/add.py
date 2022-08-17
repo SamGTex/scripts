@@ -20,12 +20,12 @@ def save_folder(folder_read_path, folder_target_path):
         elif os.path.isfile(read_path_i) and os.path.isfile(target_path_i) and not filecmp.cmp(read_path_i, target_path_i):
             print(bcolors.OKGREEN + 'Changes adjust: ' + bcolors.ENDC + read_path_i + ' --> ' + target_path_i)
             os.remove(target_path_i)
-            shutil.copyfile(read_path_i, target_path_i)
+            shutil.copy(read_path_i, target_path_i)
             counter_file_changes += 1
         #file doesent exist
         elif os.path.isfile(read_path_i) and not os.path.isfile(target_path_i):
             print(bcolors.OKGREEN + 'Copy: ' + bcolors.ENDC + read_path_i + ' --> ' + target_path_i)
-            shutil.copyfile(read_path_i, target_path_i)
+            shutil.copy(read_path_i, target_path_i)
             counter_new_files += 1
             
         #folder exist
