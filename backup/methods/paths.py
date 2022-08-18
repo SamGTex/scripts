@@ -5,8 +5,8 @@ class path:
     def __init__(self):
 
         #path to csv files
-        self.PATH_READ='../paths/path_source.csv' 
-        self.PATH_WRITE='../paths/path_target.csv'
+        self.PATH_READ='paths/path_source.csv' 
+        self.PATH_WRITE='paths/path_target.csv'
 
         #get current saved paths
         self.df_read = pd.read_csv(self.PATH_READ,)
@@ -32,23 +32,24 @@ class path:
         if num_contains_str > 0:
             name_exist = self.df_write['name'].iloc[num_contains_str-1]
             print(f'Path {path_input} already in Target: {name_exist}')
-            return
+            return False
         else:
             self.df_write = self.df_write.append({'name': name, 'path': path_input}, ignore_index=True)
             self.__update_csv_write()
             print(f'Path {path_input} saved.')
-            return
+            return True
 
     def add_path_read(self, name, path_input):
         num_contains_str = self.df_read['path'].str.contains(path_input).sum()
         if num_contains_str > 0:
             name_exist = self.df_read['name'].iloc[num_contains_str-1]
             print(f'Path {path_input} already in Source: {name_exist}')
-            return 1
+            return False
         else:
             self.df_read = self.df_read.append({'name': name, 'path': path_input}, ignore_index=True)
             self.__update_csv_read()
             print(f'Path {path_input} saved.')
+            return True
 
     # remove paths from df >>>
     def del_path_write(self, name):
@@ -60,10 +61,10 @@ class path:
             self.df_write.drop(_mask, inplace=True)
             self.__update_csv_write()
             print(f'Source "{name}" deleted from destination directory.')
-            return 0
+            return True
         else:
             print(f'"{name}" does not exit in destination directory.')
-            return 1
+            return False
     
     def del_path_read(self, name):
         # check if name exist than drop row with name
@@ -74,10 +75,10 @@ class path:
             self.df_read.drop(_mask, inplace=True)
             self.__update_csv_read()
             print(f'Source "{name}" deleted from source.')
-            return 0
+            return True
         else:
             print(f'"{name}" does not exit in source.')
-            return 1
+            return False
 
 if __name__ =='__main__':
     obj = path()
