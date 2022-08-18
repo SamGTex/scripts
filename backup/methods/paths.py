@@ -28,7 +28,8 @@ class path:
 
     # save path to df >>>
     def add_path_write(self, name, path_input):
-        num_contains_str = self.df_write['path'].str.contains(path_input).sum()
+        num_contains_str = (self.df_read['path']==path_input).sum()
+
         if num_contains_str > 0:
             name_exist = self.df_write['name'].iloc[num_contains_str-1]
             print(f'Path {path_input} already in Target: {name_exist}')
@@ -40,7 +41,8 @@ class path:
             return True
 
     def add_path_read(self, name, path_input):
-        num_contains_str = self.df_read['path'].str.contains(path_input).sum()
+        num_contains_str = (self.df_read['path']==path_input).sum()
+
         if num_contains_str > 0:
             name_exist = self.df_read['name'].iloc[num_contains_str-1]
             print(f'Path {path_input} already in Source: {name_exist}')
@@ -54,11 +56,13 @@ class path:
     # remove paths from df >>>
     def del_path_write(self, name):
         # check if name exist than drop row with name
-        num_contains_str = self.df_write['name'].str.contains(name).sum()
-        if num_contains_str > 0:
-            _mask = self.df_write[self.df_write['name']==name].index
+        num_contains_str = (self.df_write['name']==name).sum()
 
-            self.df_write.drop(_mask, inplace=True)
+        if num_contains_str > 0:
+            _ind = self.df_write[self.df_write['name']==name].index
+
+            self.df_write.drop(_ind, inplace=True)
+            self.df_write.reset_index(inplace=True, drop=False)
             self.__update_csv_write()
             print(f'Source "{name}" deleted from destination directory.')
             return True
@@ -68,12 +72,14 @@ class path:
     
     def del_path_read(self, name):
         # check if name exist than drop row with name
-        num_contains_str = self.df_read['name'].str.contains(name).sum()
-        if num_contains_str > 0:
-            _mask = self.df_read[self.df_read['name']==name].index
+        num_contains_str = (self.df_read['name']==name).sum()
 
-            self.df_read.drop(_mask, inplace=True)
-            self.__update_csv_read()
+        if num_contains_str > 0:
+            _ind = self.df_read[self.df_read['name']==name].index
+
+            self.df_read.drop(_ind, inplace=True) #drop row
+            self.df_read.reset_index(drop=True, inplace=True) #reset index
+            self.__update_csv_read() #save modifications
             print(f'Source "{name}" deleted from source.')
             return True
         else:
